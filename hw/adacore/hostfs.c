@@ -380,24 +380,21 @@ static void hostfs_reset(DeviceState *d)
     }
 }
 
-static int hostfs_init(SysBusDevice *dev)
+static void hostfs_realize(DeviceState *dev, Error **errp)
 {
     hostfs *hfs = QEMU_HOSTFS_DEVICE(dev);
 
     memory_region_init_io(&hfs->io_area, OBJECT(hfs),
                           &hostfs_ops, hfs, TYPE_HOSTFS_DEVICE, REG_NUMBER
                                                         * HOSTFS_REG_SIZE);
-    sysbus_init_mmio(dev, &hfs->io_area);
-
-    return 0;
+    sysbus_init_mmio(SYS_BUS_DEVICE(dev), &hfs->io_area);
 }
 
 static void hostfs_class_init(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
-    SysBusDeviceClass *k = SYS_BUS_DEVICE_CLASS(klass);
 
-    k->init = hostfs_init;
+    dc->realize = hostfs_realize;
     dc->reset = hostfs_reset;
 }
 
