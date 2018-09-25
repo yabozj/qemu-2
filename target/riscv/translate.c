@@ -119,6 +119,16 @@ static void gen_exception_inst_addr_mis(DisasContext *ctx)
     generate_exception_mbadaddr(ctx, RISCV_EXCP_INST_ADDR_MIS);
 }
 
+/* Wrapper around tcg_gen_exit_tb that handles single stepping */
+static void exit_tb(DisasContext *ctx, TranslationBlock *tb, unsigned idx)
+{
+    if (ctx->base.singlestep_enabled) {
+        gen_exception_debug();
+    } else {
+        tcg_gen_exit_tb(tb, idx);
+    }
+}
+
 static inline bool use_goto_tb(DisasContext *ctx, target_ulong dest)
 {
     if (unlikely(ctx->base.singlestep_enabled)) {
@@ -138,14 +148,10 @@ static void gen_goto_tb(DisasContext *ctx, int n, target_ulong dest)
         /* chaining is only allowed when the jump is to the same page */
         tcg_gen_goto_tb(n);
         tcg_gen_movi_tl(cpu_pc, dest);
-        tcg_gen_exit_tb(ctx->base.tb, n);
+        exit_tb(ctx, ctx->base.tb, n);
     } else {
         tcg_gen_movi_tl(cpu_pc, dest);
-        if (ctx->base.singlestep_enabled) {
-            gen_exception_debug();
-        } else {
-            tcg_gen_lookup_and_goto_ptr();
-        }
+        exit_tb(ctx, NULL, 0);
     }
 }
 
@@ -758,7 +764,8 @@ static void riscv_tr_tb_stop(DisasContextBase *dcbase, CPUState *cpu)
 
     switch (ctx->base.is_jmp) {
     case DISAS_TOO_MANY:
-        gen_goto_tb(ctx, 0, ctx->base.pc_next);
+        tcg_gen_movi_tl(cpu_pc, ctx->base.pc_next);
+        exit_tb(ctx, NULL, 0);
         break;
     case DISAS_NORETURN:
         break;
