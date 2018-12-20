@@ -4356,9 +4356,13 @@ static inline bool use_goto_tb(DisasContext *s, target_ulong dest)
 #endif
 }
 
-static void gen_goto_ptr(void)
+static void gen_goto_ptr(DisasContext *s, int n)
 {
-    tcg_gen_lookup_and_goto_ptr();
+    if (tracefile_enabled) {
+        tcg_gen_exit_tb(s->base.tb, TB_EXIT_NOPATCH | n);
+    } else {
+        tcg_gen_lookup_and_goto_ptr();
+    }
 }
 
 /* This will end the TB but doesn't guarantee we'll return to
@@ -4373,11 +4377,7 @@ static void gen_goto_tb(DisasContext *s, int n, target_ulong dest)
         tcg_gen_exit_tb(s->base.tb, n);
     } else {
         gen_set_pc_im(s, dest);
-        if (tracefile_enabled) {
-            tcg_gen_exit_tb(s->base.tb, TB_EXIT_NOPATCH | n);
-        } else {
-            gen_goto_ptr();
-        }
+        gen_goto_ptr(s, n);
     }
     s->base.is_jmp = DISAS_NORETURN;
 }
@@ -13675,7 +13675,7 @@ static void arm_tr_tb_stop(DisasContextBase *dcbase, CPUState *cpu)
             gen_goto_tb(dc, 1, dc->pc);
             break;
         case DISAS_JUMP:
-            gen_goto_ptr();
+            gen_goto_ptr(dc, 0);
             break;
         case DISAS_UPDATE:
             gen_set_pc_im(dc, dc->pc);
