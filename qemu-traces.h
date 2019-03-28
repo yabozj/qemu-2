@@ -119,5 +119,6 @@ void exec_trace_limit(const char *optarg);
 void exec_trace_cleanup(void);
 void exec_trace_push_entry(void);
 void exec_trace_special(uint16_t subop, uint32_t data);
+void qemu_exit_with_debug(const char *fmt, ...);
 
 #endif /* QEMU_TRACE_H */
