@@ -838,7 +838,6 @@ static void fsl_e500_init(fsl_e500_config *config, MachineState *args)
     qemu_irq     *mpic, **irqs;
     ResetData    *reset_info;
     DriveInfo    *dinfo;
-    int           fl_sectors;
     int           i;
 
     /* Setup CPU */
@@ -994,20 +993,19 @@ static void fsl_e500_init(fsl_e500_config *config, MachineState *args)
     if (dinfo) {
         BlockBackend *blk = blk_by_legacy_dinfo(dinfo);
         bios_size   = blk_getlength(blk);
-        fl_sectors  = (bios_size + 65535) >> 16;
 
         if (config->cfi01_flash) {
-            if (pflash_cfi01_register(0xff800000, NULL, "8548.flash.1",
-                                      bios_size, blk, 65536, fl_sectors,
+            if (pflash_cfi01_register(0xff800000, "8548.flash.1",
+                                      bios_size, blk, 65536,
                                       2, 0x0001, 0x22DA, 0x0000, 0x0000,
                                       1) == NULL) {
                 fprintf(stderr, "%s: Failed to load flash image\n", __func__);
                 abort();
             }
         } else {
-            if (pflash_cfi02_register((uint32_t)(-bios_size), NULL,
+            if (pflash_cfi02_register((uint32_t)(-bios_size),
                                       "p2010.bios", bios_size, blk,
-                                      65536, fl_sectors, 1, 2, 0x0001, 0x22DA,
+                                      65536, 1, 2, 0x0001, 0x22DA,
                                       0x0, 0x0, 0x555, 0x2AA, 1) == NULL) {
                 fprintf(stderr, "%s: Failed to load flash image\n", __func__);
                 abort();
