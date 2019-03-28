@@ -3,6 +3,7 @@
 #define GNATBUS_BIG_ENDIAN (TARGET_WORDS_BIGENDIAN)
 
 #include "qemu/osdep.h"
+#include "qemu/error-report.h"
 #include "qemu/timer.h"
 #include "exec/memory.h"
 #include "exec/address-spaces.h"
