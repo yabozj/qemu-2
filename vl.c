@@ -4494,7 +4494,6 @@ int main(int argc, char **argv, char **envp)
         exit(0);
     }
 
-<<<<<<< HEAD
     /*
      * Migration object can only be created after global properties
      * are applied correctly.
@@ -4508,13 +4507,12 @@ int main(int argc, char **argv, char **envp)
      * migration blockers.
      */
     configure_blockdev(&bdo_queue, machine_class, snapshot);
-=======
+
     if (qemu_opts_foreach(qemu_find_opts("add-memory"),
                           foreach_add_memory,
                           NULL, NULL)) {
         exit(1);
     }
->>>>>>> 028bc3c... New option: -add-memory to allow user defined memory banks
 
     machine_opts = qemu_get_machine_opts();
     qemu_opt_foreach(machine_opts, machine_set_property, current_machine,
