@@ -125,3 +125,6 @@ config MUSCA
 
 config TMS570
     bool
+
+config STM32
+    bool
