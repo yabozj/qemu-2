@@ -851,8 +851,9 @@ static void at697_hw_init(MachineState *machine)
         long     kernel_size;
         uint64_t entry;
 
-        kernel_size = load_elf(kernel_filename, NULL, NULL, &entry, NULL, NULL,
-                               1 /* big endian */, EM_SPARC, 0, 0);
+        kernel_size = load_elf(kernel_filename, NULL, NULL, NULL, &entry,
+                               NULL, NULL, 1 /* big endian */, EM_SPARC, 0,
+                               0);
         if (kernel_size < 0) {
             fprintf(stderr, "qemu: could not load kernel '%s'\n",
                     kernel_filename);
