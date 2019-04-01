@@ -5056,11 +5056,6 @@ static void init_proc_e500(CPUPPCState *env, int version)
                  &spr_read_generic, &spr_write_generic,
                  0x00000000);
     /* XXX : not implemented*/
-    spr_register(env, SPR_BOOKE_EPCR, "BOOKE_EPCR",
-                 SPR_NOACCESS, SPR_NOACCESS,
-                 &spr_read_generic, &spr_write_generic,
-                 0x00000000);
-    /* XXX : not implemented*/
     spr_register(env, SPR_BOOKE_GSRR0, "BOOKE_GSRR0",
                  SPR_NOACCESS, SPR_NOACCESS,
                  &spr_read_generic, &spr_write_generic,
