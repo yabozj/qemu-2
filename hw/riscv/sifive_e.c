@@ -43,6 +43,7 @@
 #include "hw/riscv/sifive_clint.h"
 #include "hw/riscv/sifive_prci.h"
 #include "hw/riscv/sifive_uart.h"
+#include "hw/riscv/sifive_test.h"
 #include "hw/riscv/sifive_e.h"
 #include "chardev/char.h"
 #include "sysemu/arch_init.h"
