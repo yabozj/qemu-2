@@ -2674,7 +2674,7 @@ static ARMCPRegInfo generic_timer_cp_reginfo[] = {
       .opc0 = 3, .opc1 = 3, .crn = 14, .crm = 0, .opc2 = 0,
       .access = PL1_RW | PL0_R, .accessfn = gt_cntfrq_access,
       .fieldoffset = offsetof(CPUARMState, cp15.c14_cntfrq),
-      .resetvalue = (1000 * 1000 * 1000) / GTIMER_SCALE,
+      .resetvalue = NANOSECONDS_PER_SECOND / GTIMER_SCALE,
     },
     /* overall control: mostly access permissions */
     { .name = "CNTKCTL", .state = ARM_CP_STATE_BOTH,
@@ -6368,7 +6368,7 @@ void register_cp_regs_for_features(ARMCPU *cpu)
         for (info = generic_timer_cp_reginfo;
              info && info->type != ARM_CP_SENTINEL; info++) {
             if (!strcmp("CNTFRQ_EL0", info->name)) {
-                info->resetvalue = 1000 * 1000 * 1000 / cpu->gtimer_scale;
+                info->resetvalue = NANOSECONDS_PER_SECOND / cpu->gtimer_scale;
                 break;
             }
         }
