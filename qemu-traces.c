@@ -50,6 +50,8 @@
 #  define ELF_MACHINE EM_386_64
 #elif defined(TARGET_RISCV64)
 #  define ELF_MACHINE EM_RISCV
+#elif defined(TARGET_RISCV32)
+#  define ELF_MACHINE EM_RISCV
 #else
 #error "Unknown architecture"
 #endif
